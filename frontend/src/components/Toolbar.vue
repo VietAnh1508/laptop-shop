@@ -3,9 +3,7 @@
     <v-toolbar-title>Logo</v-toolbar-title>
     <v-text-field hide-details prepend-icon="search" single-line placeholder="Bạn tìm gì..."></v-text-field>
     <v-toolbar-items>
-      <v-btn flat small>
-        <v-icon>smartphone</v-icon>Điện thoại
-      </v-btn>
+      <v-btn flat small>Điện thoại</v-btn>
       <v-btn flat small>Tablet</v-btn>
       <v-btn flat small>Laptop</v-btn>
       <v-btn flat small>Phụ kiện</v-btn>
@@ -37,3 +35,8 @@
 export default {};
 </script>
 
+<style scoped>
+.v-btn {
+  min-width: 0;
+}
+</style>

@@ -1,19 +1,21 @@
 <template>
   <div id="app">
-    <toolbar/>
-    <router-view/>
+    <home/>
   </div>
 </template>
 
 <script>
-import Toolbar from "@/components/Toolbar";
+import Home from "@/views/Home";
 
 export default {
   components: {
-    toolbar: Toolbar
+    home: Home
   }
 };
 </script>
 
-<style>
+<style scoped>
+#app {
+  background: #f0f0f0;
+}
 </style>
