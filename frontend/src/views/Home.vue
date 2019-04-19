@@ -74,7 +74,7 @@
           </v-card>
         </v-flex>
         <v-flex xs12>
-          <home-product title="ĐIỆN THOẠI NỔI BẬT NHẤT"/>
+          <home-product-list title="ĐIỆN THOẠI NỔI BẬT NHẤT"/>
         </v-flex>
       </v-layout>
     </v-container>
@@ -83,12 +83,12 @@
 
 <script>
 import Toolbar from "@/components/Toolbar";
-import HomeProduct from "@/components/HomeProduct";
+import HomeProductList from "@/components/HomeProductList";
 
 export default {
   components: {
     toolbar: Toolbar,
-    "home-product": HomeProduct
+    "home-product-list": HomeProductList
   },
   data() {
     return {

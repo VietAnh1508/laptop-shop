@@ -1,7 +1,7 @@
 <template>
   <v-card flat>
     <v-toolbar color="white" card prominent class="navigat">
-      <v-card-title class="font-weight-bold">{{ title }}</v-card-title>
+      <v-card-title class="font-weight-bold subheading">{{ title }}</v-card-title>
       <v-spacer></v-spacer>
       <a v-for="(link, i) in navigateLinks" :key="i">{{ link }}</a>
     </v-toolbar>
@@ -10,46 +10,22 @@
 
     <v-container fluid>
       <v-layout row wrap>
-        <v-flex class="feature" v-for="(item, i) in features" :key="`feature-${i}`">
-          <v-card>
-            <v-img :src="item.image"/>
-            <v-card-title primary-title>
-              <div>
-                <div>{{ item.title }}</div>
-                <div class="price">
-                  <strong class="red--text">{{ formatPrice(item.price) }}</strong>
-                </div>
-              </div>
-            </v-card-title>
-          </v-card>
-        </v-flex>
-        <v-flex class="col-xs-5ths" v-for="(product, i) in products" :key="`product-${i}`">
-          <v-card class="product">
-            <v-img class="product-image" :src="product.image"/>
-            <v-card-title primary-title>
-              <div>
-                <div>{{ product.title }}</div>
-                <div class="price">
-                  <strong class="red--text">{{ formatPrice(product.price) }}</strong>
-                  <span
-                    v-if="product.discount !== undefined"
-                    class="discount"
-                  >{{ formatPrice(product.discount) }}</span>
-                </div>
-                <div class="promo">
-                  <p>{{ product.promo }}</p>
-                </div>
-              </div>
-            </v-card-title>
-          </v-card>
-        </v-flex>
+        <feature-product :product="features[0]"/>
+        <product v-for="(product, i) in products" :key="`product-${i}`" :product="product"/>
       </v-layout>
     </v-container>
   </v-card>
 </template>
 
 <script>
+import FeatureProduct from "./FeatureProduct";
+import Produdct from "@/components/Product";
+
 export default {
+  components: {
+    product: Produdct,
+    "feature-product": FeatureProduct
+  },
   props: {
     title: {
       type: String
@@ -141,35 +117,6 @@ export default {
 </script>
 
 <style scoped>
-.feature {
-  width: 40%;
-  float: left;
-}
-
-.product {
-  height: 100%;
-}
-
-.product-image {
-  margin: 0 auto;
-  width: 180px;
-  height: 180px;
-}
-
-.price {
-  display: block;
-  margin: 5px 0;
-}
-
-.discount {
-  text-decoration: line-through;
-  margin-left: 3px;
-}
-
-.promo {
-  display: block;
-}
-
 .navigat a {
   margin: 0 5px;
 }
