@@ -25,12 +25,12 @@
 import productMixin from "@/mixins/productMixin";
 
 export default {
+  mixins: [productMixin],
   props: {
     product: {
       type: Object
     }
-  },
-  mixins: [productMixin]
+  }
 };
 </script>
 
@@ -57,5 +57,6 @@ export default {
 
 .promo {
   display: block;
+  font-size: 12px;
 }
 </style>

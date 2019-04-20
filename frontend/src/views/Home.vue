@@ -4,9 +4,7 @@
     <v-container fluid>
       <v-layout row wrap>
         <v-flex xs8 class="pr-2 mb-2">
-          <v-carousel height="300" hide-delimiters>
-            <v-carousel-item v-for="(item, i) in items" :key="i" :src="item.src"></v-carousel-item>
-          </v-carousel>
+          <carousel/>
         </v-flex>
         <v-flex xs4>
           <v-layout column>
@@ -74,7 +72,20 @@
           </v-card>
         </v-flex>
         <v-flex xs12>
-          <home-product-list title="ĐIỆN THOẠI NỔI BẬT NHẤT"/>
+          <home-product-list
+            title="ĐIỆN THOẠI NỔI BẬT NHẤT"
+            :navigateLinks="smartphoneNavigateLinks"
+            :feature="smartphoneFeature"
+            :products="smartphones"
+          />
+        </v-flex>
+        <v-flex xs12>
+          <home-product-list
+            title="TABLET - LAPTOP NỔI BẬT NHẤT"
+            :navigateLinks="laptopNavigateLinks"
+            :feature="laptopFeature"
+            :products="laptops"
+          />
         </v-flex>
       </v-layout>
     </v-container>
@@ -83,42 +94,34 @@
 
 <script>
 import Toolbar from "@/components/Toolbar";
+import Carousel from "@/components/Carousel";
 import HomeProductList from "@/components/HomeProductList";
 
 export default {
   components: {
     toolbar: Toolbar,
+    carousel: Carousel,
     "home-product-list": HomeProductList
   },
-  data() {
-    return {
-      items: [
-        {
-          src:
-            "https://cdn.tgdd.vn/qcao/29_03_2019_10_01_26_Oppo-f11pro-800-300.png"
-        },
-        {
-          src: "https://cdn.tgdd.vn/qcao/08_04_2019_15_17_40_800-300.png"
-        },
-        {
-          src:
-            "https://cdn.tgdd.vn/qcao/04_04_2019_21_02_58_Realme-3-800-300.png"
-        }
-      ]
-    };
-  },
-  methods: {
-    next() {
-      this.onboarding =
-        this.onboarding + 1 === this.length ? 0 : this.onboarding + 1;
+  computed: {
+    smartphoneNavigateLinks() {
+      return this.$store.state.smartphone.navigateLinks;
     },
-    prev() {
-      this.onboarding =
-        this.onboarding - 1 < 0 ? this.length - 1 : this.onboarding - 1;
+    smartphoneFeature() {
+      return this.$store.state.smartphone.feature;
+    },
+    smartphones() {
+      return this.$store.state.smartphone.products;
+    },
+    laptopNavigateLinks() {
+      return this.$store.state.laptop.navigateLinks;
+    },
+    laptopFeature() {
+      return this.$store.state.laptop.feature;
+    },
+    laptops() {
+      return this.$store.state.laptop.products;
     }
   }
 };
 </script>
-
-<style scoped>
-</style>

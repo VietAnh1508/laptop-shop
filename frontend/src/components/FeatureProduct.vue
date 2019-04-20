@@ -18,12 +18,12 @@
 import productMixin from "@/mixins/productMixin";
 
 export default {
+  mixins: [productMixin],
   props: {
     product: {
       type: Object
     }
-  },
-  mixins: [productMixin]
+  }
 };
 </script>
 
