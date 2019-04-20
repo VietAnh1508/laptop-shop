@@ -6,6 +6,7 @@
         <v-flex xs8 class="pr-2 mb-2">
           <carousel/>
         </v-flex>
+
         <v-flex xs4>
           <v-layout column>
             <v-flex>
@@ -35,9 +36,11 @@
             </v-flex>
           </v-layout>
         </v-flex>
+
         <v-flex xs12 class="my-2">
           <v-img src="https://cdn.tgdd.vn/qcao/09_04_2019_22_57_06_1200-75.png"></v-img>
         </v-flex>
+
         <v-flex xs12 class="mb-2">
           <v-card flat>
             <v-card-title>
@@ -71,21 +74,40 @@
             </v-card-actions>
           </v-card>
         </v-flex>
+
         <v-flex xs12>
-          <home-product-list
-            title="ĐIỆN THOẠI NỔI BẬT NHẤT"
-            :navigateLinks="smartphoneNavigateLinks"
-            :feature="smartphoneFeature"
-            :products="smartphones"
-          />
+          <home-product-list :feature="smartphoneFeature" :products="smartphones">
+            <navigate
+              slot="navigate"
+              title="ĐIỆN THOẠI NỔI BẬT NHẤT"
+              :links="smartphoneNavigateLinks"
+            />
+          </home-product-list>
         </v-flex>
+
         <v-flex xs12>
-          <home-product-list
-            title="TABLET - LAPTOP NỔI BẬT NHẤT"
-            :navigateLinks="laptopNavigateLinks"
-            :feature="laptopFeature"
-            :products="laptops"
-          />
+          <home-product-list :feature="laptopFeature" :products="laptops">
+            <navigate
+              slot="navigate"
+              title="TABLET - LAPTOP NỔI BẬT NHẤT"
+              :links="laptopNavigateLinks"
+            />
+          </home-product-list>
+        </v-flex>
+
+        <v-flex xs12>
+          <v-card>
+            <navigate title="KHUYẾN MÃI TẠI CÁC WEBSITE THÀNH VIÊN"/>
+            <v-container fluid>
+              <v-layout>
+                <v-flex xs12>
+                  <v-img
+                    src="https://cdn.tgdd.vn/qcao/13_04_2019_13_16_59_TGDD-maylanh-banner-desk.jpg"
+                  />
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-card>
         </v-flex>
       </v-layout>
     </v-container>
@@ -95,12 +117,14 @@
 <script>
 import Toolbar from "@/components/Toolbar";
 import Carousel from "@/components/Carousel";
+import Navigate from "@/components/Navigate";
 import HomeProductList from "@/components/HomeProductList";
 
 export default {
   components: {
     toolbar: Toolbar,
     carousel: Carousel,
+    navigate: Navigate,
     "home-product-list": HomeProductList
   },
   computed: {

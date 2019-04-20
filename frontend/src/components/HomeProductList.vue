@@ -1,13 +1,7 @@
 <template>
   <v-card>
-    <v-toolbar color="white" card prominent class="navigat">
-      <v-card-title class="font-weight-bold subheading">{{ title }}</v-card-title>
-      <v-spacer></v-spacer>
-      <a v-for="(link, i) in navigateLinks" :key="i">{{ link }}</a>
-    </v-toolbar>
-
+    <slot name="navigate"></slot>
     <v-divider></v-divider>
-
     <v-container fluid>
       <v-layout row wrap>
         <feature-product :product="feature"/>
