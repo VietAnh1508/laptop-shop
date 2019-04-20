@@ -7,7 +7,7 @@
           <carousel/>
         </v-flex>
 
-        <v-flex xs4>
+        <v-flex xs4 class="mb-2">
           <v-layout column>
             <v-flex>
               <v-card flat>
@@ -37,7 +37,7 @@
           </v-layout>
         </v-flex>
 
-        <v-flex xs12 class="my-2">
+        <v-flex xs12 class="mb-2">
           <v-img src="https://cdn.tgdd.vn/qcao/09_04_2019_22_57_06_1200-75.png"></v-img>
         </v-flex>
 
@@ -75,7 +75,7 @@
           </v-card>
         </v-flex>
 
-        <v-flex xs12>
+        <v-flex xs12 class="mb-2">
           <home-product-list :feature="smartphoneFeature" :products="smartphones">
             <navigate
               slot="navigate"
@@ -85,7 +85,7 @@
           </home-product-list>
         </v-flex>
 
-        <v-flex xs12>
+        <v-flex xs12 class="mb-2">
           <home-product-list :feature="laptopFeature" :products="laptops">
             <navigate
               slot="navigate"
