@@ -2,6 +2,9 @@ package com.laptopshop.controller;
 
 import com.laptopshop.entity.Product;
 import com.laptopshop.service.ProductService;
+
+import io.swagger.annotations.ApiOperation;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +23,7 @@ public class ProductController {
     }
 
     @GetMapping
+    @ApiOperation(value = "Get all products")
     public ResponseEntity<List<Product>> getAllProduct() {
         List<Product> products = productService.getAll();
         return new ResponseEntity<>(products, HttpStatus.OK);
