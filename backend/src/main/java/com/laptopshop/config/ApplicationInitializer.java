@@ -11,7 +11,10 @@ public class ApplicationInitializer extends AbstractAnnotationConfigDispatcherSe
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[] { ApplicationConfig.class };
+        return new Class[] {
+                ApplicationConfig.class,
+                SwaggerConfig.class
+        };
     }
 
     @Override
