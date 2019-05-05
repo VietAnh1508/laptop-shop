@@ -98,6 +98,7 @@
         <v-flex xs12>
           <v-card>
             <navigate title="KHUYẾN MÃI TẠI CÁC WEBSITE THÀNH VIÊN"/>
+            <v-divider></v-divider>
             <v-container fluid>
               <v-layout>
                 <v-flex xs12>
@@ -111,6 +112,7 @@
         </v-flex>
       </v-layout>
     </v-container>
+    <app-footer/>
   </div>
 </template>
 
@@ -119,13 +121,15 @@ import Toolbar from "@/components/Toolbar";
 import Carousel from "@/components/Carousel";
 import Navigate from "@/components/Navigate";
 import HomeProductList from "@/components/HomeProductList";
+import AppFooter from "@/components/AppFooter";
 
 export default {
   components: {
     toolbar: Toolbar,
     carousel: Carousel,
     navigate: Navigate,
-    "home-product-list": HomeProductList
+    "home-product-list": HomeProductList,
+    "app-footer": AppFooter
   },
   computed: {
     smartphoneNavigateLinks() {
