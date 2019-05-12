@@ -1,5 +1,7 @@
 package com.laptopshop.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -15,6 +17,7 @@ public class Brand {
 
     private String logoImagePath;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "brand")
     private List<Product> productList;
 
