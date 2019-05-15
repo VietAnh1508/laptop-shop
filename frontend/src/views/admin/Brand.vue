@@ -47,7 +47,9 @@
 
 <script>
 import { setTimeout } from "timers";
-import axios from "axios";
+import { RepositoryFactory } from "@/repository/repositoryFactory";
+
+const brandsRepository = RepositoryFactory.get("brands");
 
 export default {
   data: () => ({
@@ -64,7 +66,8 @@ export default {
     },
     defaultItem: {
       name: ""
-    }
+    },
+    isLoading: false
   }),
 
   computed: {
@@ -78,11 +81,11 @@ export default {
   },
 
   methods: {
-    fecthAllData() {
-      axios
-        .get("/api/brands")
-        .then(res => (this.brands = res.data))
-        .catch(err => alert(err));
+    async fecthAllData() {
+      this.isLoading = true;
+      const { data } = await brandsRepository.getAll();
+      this.isLoading = false;
+      this.brands = data;
     },
 
     editItem(item) {
@@ -91,14 +94,15 @@ export default {
       this.form = true;
     },
 
-    deleteItem(item) {
+    async deleteItem(item) {
       const index = this.brands.indexOf(item);
 
-      confirm("Are you sure you want to delete this item?") &&
-        axios
-          .delete(`/api/brands/${item.id}`)
-          .then(res => res.status === 200 && this.brands.splice(index, 1))
-          .catch(err => console.log(err));
+      if (confirm("Are you sure you want to delete this item?")) {
+        let res = await brandsRepository.delete(item.id);
+        if (res.status === 200) {
+          this.brands.splice(index, 1);
+        }
+      }
     },
 
     close() {
@@ -109,28 +113,31 @@ export default {
       }, 300);
     },
 
-    save() {
+    async save() {
       if (this.editedIndex > -1) {
-        axios
-          .put("/api/brands", {
-            id: this.editedItem.id,
-            name: this.editedItem.name
-          })
-          .then(
-            res =>
-              res.status === 200 &&
-              Object.assign(this.brands[this.editedIndex], res.data)
-          )
-          .catch(err => console.log(err));
+        this.updateBrand();
       } else {
-        axios
-          .post("/api/brands", {
-            name: this.editedItem.name
-          })
-          .then(res => res.status === 201 && this.brands.push(res.data))
-          .catch(err => console.log(err));
+        this.createBrand();
       }
       this.close();
+    },
+
+    async updateBrand() {
+      let res = await brandsRepository.update({
+        id: this.editedItem.id,
+        name: this.editedItem.name
+      });
+
+      res.status === 200 &&
+        Object.assign(this.brands[this.editedIndex], res.data);
+    },
+
+    async createBrand() {
+      let res = await brandsRepository.create({
+        name: this.editedItem.name
+      });
+
+      res.status === 201 && this.brands.push(res.data);
     }
   }
 };
