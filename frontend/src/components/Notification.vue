@@ -8,7 +8,7 @@
 <script>
 export default {
   props: {
-    isShow: {
+    value: {
       type: Boolean,
       required: true
     },
@@ -27,6 +27,15 @@ export default {
     };
   },
   computed: {
+    isShow: {
+      get() {
+        return this.value;
+      },
+      set(value) {
+        this.$emit("input", value);
+      }
+    },
+
     color() {
       return this.isSuccess ? "success" : "error";
     }

@@ -24,7 +24,7 @@
       </template>
     </v-data-table>
 
-    <Notification :isShow="showMessage" :message="crudMessage" :isSuccess="isCrudSuccess"/>
+    <Notification v-model="showMessage" :message="crudMessage" :isSuccess="isCrudSuccess"/>
   </div>
 </template>
 
