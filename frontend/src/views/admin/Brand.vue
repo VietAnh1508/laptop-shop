@@ -3,33 +3,14 @@
     <v-toolbar flat color="white">
       <v-toolbar-title>Brand</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-dialog v-model="form" max-width="500px">
-        <template v-slot:activator="{ on }">
-          <v-btn color="primary" dark class="mb-2" v-on="on">New Item</v-btn>
-        </template>
-
-        <v-card>
-          <v-card-title>
-            <span class="title">{{ formTitle }}</span>
-          </v-card-title>
-
-          <v-card-text>
-            <v-container grid-list-md>
-              <v-layout wrap>
-                <v-flex xs12>
-                  <v-text-field v-model="editedItem.name" label="Name"></v-text-field>
-                </v-flex>
-              </v-layout>
-            </v-container>
-          </v-card-text>
-
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
-            <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+      <v-btn color="primary" dark class="mb-2" @click.stop="isShowForm = true">New Item</v-btn>
+      <Modal
+        v-model="isShowForm"
+        :title="formTitle"
+        :editedItem="editedItem"
+        @closeModal="close"
+        @saveItem="save"
+      />
     </v-toolbar>
 
     <v-data-table :headers="headers" :items="brands" :loading="isLoading">
@@ -43,11 +24,12 @@
       </template>
     </v-data-table>
 
-    <notification :isShow="showMessage" :message="crudMessage" :isSuccess="isCrudSuccess"/>
+    <Notification :isShow="showMessage" :message="crudMessage" :isSuccess="isCrudSuccess"/>
   </div>
 </template>
 
 <script>
+import Modal from "@/components/Modal";
 import Notification from "@/components/Notification";
 import { RepositoryFactory } from "@/repository/repositoryFactory";
 
@@ -55,21 +37,24 @@ const brandsRepository = RepositoryFactory.get("brands");
 
 export default {
   components: {
-    notification: Notification
+    Modal,
+    Notification
   },
   data: () => ({
-    form: false,
     headers: [
       { text: "No", value: "no" },
       { text: "Brand", value: "name" },
       { text: "Actions", align: "center", value: "name", sortable: false }
     ],
     brands: [],
+    isShowForm: false,
     editedIndex: -1,
     editedItem: {
+      id: "",
       name: ""
     },
     defaultItem: {
+      id: "",
       name: ""
     },
     isLoading: false,
@@ -99,7 +84,51 @@ export default {
     editItem(item) {
       this.editedIndex = this.brands.indexOf(item);
       this.editedItem = Object.assign({}, item);
-      this.form = true;
+      this.isShowForm = true;
+    },
+
+    close() {
+      this.isShowForm = false;
+      setTimeout(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      }, 300);
+    },
+
+    save(item) {
+      if (this.editedIndex > -1) {
+        this.updateBrand(item);
+      } else {
+        this.createBrand(item);
+      }
+      this.close();
+    },
+
+    async updateBrand(item) {
+      let res = await brandsRepository.update({
+        id: item.id,
+        name: item.name
+      });
+
+      if (res.status === 200) {
+        Object.assign(this.brands[this.editedIndex], res.data);
+        this.showNotification("Updated successfully", true);
+      } else {
+        this.showNotification("Error when update brand", false);
+      }
+    },
+
+    async createBrand(item) {
+      let res = await brandsRepository.create({
+        name: item.name
+      });
+
+      if (res.status === 201) {
+        this.brands.push(res.data);
+        this.showNotification("Added successfully", true);
+      } else {
+        this.showNotification("Error when add brand", false);
+      }
     },
 
     async deleteItem(item) {
@@ -113,50 +142,6 @@ export default {
         } else {
           this.showNotification("Error when delete brand", false);
         }
-      }
-    },
-
-    close() {
-      this.form = false;
-      setTimeout(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      }, 300);
-    },
-
-    async save() {
-      if (this.editedIndex > -1) {
-        this.updateBrand();
-      } else {
-        this.createBrand();
-      }
-      this.close();
-    },
-
-    async updateBrand() {
-      let res = await brandsRepository.update({
-        id: this.editedItem.id,
-        name: this.editedItem.name
-      });
-
-      if (res.status === 200) {
-        Object.assign(this.brands[this.editedIndex], res.data);
-        this.showNotification("Updated successfully", true);
-      } else {
-        this.showNotification("Error when update brand", false);
-      }
-    },
-
-    async createBrand() {
-      let res = await brandsRepository.create({
-        name: this.editedItem.name
-      });
-
-      if (res.status === 201) {
-        this.brands.push(res.data);
-        this.showNotification("Added successfully", true);
-      } else {
-        this.showNotification("Error when add brand", false);
       }
     },
 
