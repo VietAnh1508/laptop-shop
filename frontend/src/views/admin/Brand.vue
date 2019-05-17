@@ -32,9 +32,9 @@
       </v-dialog>
     </v-toolbar>
 
-    <v-data-table :headers="headers" :items="brands">
+    <v-data-table :headers="headers" :items="brands" :loading="isLoading">
       <template v-slot:items="props">
-        <td>{{ props.item.id }}</td>
+        <td>{{ props.index + 1 }}</td>
         <td>{{ props.item.name }}</td>
         <td class="justify-center layout px-0">
           <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
@@ -42,20 +42,25 @@
         </td>
       </template>
     </v-data-table>
+
+    <notification :isShow="showMessage" :message="crudMessage" :isSuccess="isCrudSuccess"/>
   </div>
 </template>
 
 <script>
-import { setTimeout } from "timers";
+import Notification from "@/components/Notification";
 import { RepositoryFactory } from "@/repository/repositoryFactory";
 
 const brandsRepository = RepositoryFactory.get("brands");
 
 export default {
+  components: {
+    notification: Notification
+  },
   data: () => ({
     form: false,
     headers: [
-      { text: "Id", value: "id" },
+      { text: "No", value: "no" },
       { text: "Brand", value: "name" },
       { text: "Actions", align: "center", value: "name", sortable: false }
     ],
@@ -67,7 +72,10 @@ export default {
     defaultItem: {
       name: ""
     },
-    isLoading: false
+    isLoading: false,
+    showMessage: false,
+    isCrudSuccess: false,
+    crudMessage: ""
   }),
 
   computed: {
@@ -84,8 +92,8 @@ export default {
     async fecthAllData() {
       this.isLoading = true;
       const { data } = await brandsRepository.getAll();
-      this.isLoading = false;
       this.brands = data;
+      this.isLoading = false;
     },
 
     editItem(item) {
@@ -101,6 +109,9 @@ export default {
         let res = await brandsRepository.delete(item.id);
         if (res.status === 200) {
           this.brands.splice(index, 1);
+          this.showNotification("Deleted successfully", true);
+        } else {
+          this.showNotification("Error when delete brand", false);
         }
       }
     },
@@ -128,8 +139,12 @@ export default {
         name: this.editedItem.name
       });
 
-      res.status === 200 &&
+      if (res.status === 200) {
         Object.assign(this.brands[this.editedIndex], res.data);
+        this.showNotification("Updated successfully", true);
+      } else {
+        this.showNotification("Error when update brand", false);
+      }
     },
 
     async createBrand() {
@@ -137,7 +152,18 @@ export default {
         name: this.editedItem.name
       });
 
-      res.status === 201 && this.brands.push(res.data);
+      if (res.status === 201) {
+        this.brands.push(res.data);
+        this.showNotification("Added successfully", true);
+      } else {
+        this.showNotification("Error when add brand", false);
+      }
+    },
+
+    showNotification(message, isSuccess) {
+      this.crudMessage = message;
+      this.isCrudSuccess = isSuccess;
+      this.showMessage = true;
     }
   }
 };
