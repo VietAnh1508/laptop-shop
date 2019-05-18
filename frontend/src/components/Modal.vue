@@ -5,8 +5,8 @@
         <span class="title">{{ title }}</span>
       </v-card-title>
       <v-card-text>
-        <v-form class="px-3">
-          <v-text-field v-model="itemName" label="Name"></v-text-field>
+        <v-form class="px-3" ref="form">
+          <v-text-field v-model="itemName" label="Name" :rules="inputRules"></v-text-field>
         </v-form>
       </v-card-text>
       <v-card-actions>
@@ -34,7 +34,8 @@ export default {
   },
   data() {
     return {
-      name: ""
+      name: "",
+      inputRules: [v => v !== "" || "Name is required"]
     };
   },
   computed: {
@@ -61,10 +62,12 @@ export default {
     },
 
     save() {
-      this.$emit("saveItem", {
-        id: this.editedItem.id,
-        name: this.name
-      });
+      if (this.$refs.form.validate()) {
+        this.$emit("saveItem", {
+          id: this.editedItem.id,
+          name: this.name
+        });
+      }
     }
   }
 };
