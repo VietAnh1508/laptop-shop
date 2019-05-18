@@ -25,12 +25,14 @@
     </v-data-table>
 
     <Notification v-model="showMessage" :message="crudMessage" :isSuccess="isCrudSuccess"/>
+    <Confirm ref="confirm"/>
   </div>
 </template>
 
 <script>
 import Modal from "@/components/Modal";
 import Notification from "@/components/Notification";
+import Confirm from "@/components/Confirm";
 import { RepositoryFactory } from "@/repository/repositoryFactory";
 
 const brandsRepository = RepositoryFactory.get("brands");
@@ -38,7 +40,8 @@ const brandsRepository = RepositoryFactory.get("brands");
 export default {
   components: {
     Modal,
-    Notification
+    Notification,
+    Confirm
   },
   data: () => ({
     headers: [
@@ -134,7 +137,11 @@ export default {
     async deleteItem(item) {
       const index = this.brands.indexOf(item);
 
-      if (confirm("Are you sure you want to delete this item?")) {
+      if (
+        await this.$refs.confirm.open("Delete", "Are you sure?", {
+          color: "red"
+        })
+      ) {
         let res = await brandsRepository.delete(item.id);
         if (res.status === 200) {
           this.brands.splice(index, 1);
