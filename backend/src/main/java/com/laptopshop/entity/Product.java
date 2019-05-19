@@ -21,9 +21,11 @@ public class Product {
     private String description;
 
     @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "category_id")
     private Category category;
 
     @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "brand_id")
     private Brand brand;
 
     public Product() {

@@ -1,7 +1,11 @@
 package com.laptopshop.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "category")
@@ -13,6 +17,15 @@ public class Category {
 
     private String name;
 
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "parent_id")
+    private Category parentCategory;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentCategory")
+    private Set<Category> childCategories = new HashSet<>();
+
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
     private List<Product> productList;
 
@@ -37,6 +50,22 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Category getParentCategory() {
+        return parentCategory;
+    }
+
+    public void setParentCategory(Category parentCategory) {
+        this.parentCategory = parentCategory;
+    }
+
+    public Set<Category> getChildCategories() {
+        return childCategories;
+    }
+
+    public void setChildCategories(Set<Category> childCategories) {
+        this.childCategories = childCategories;
     }
 
     public List<Product> getProductList() {

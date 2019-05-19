@@ -41,10 +41,10 @@ public class BrandResource {
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "Update brand")
-    public ResponseEntity editBrand(@RequestBody Brand brand) {
+    public ResponseEntity updateBrand(@RequestBody Brand brand) {
         try {
             Brand updatedBrand = brandService.update(brand);
-            return ResponseEntity.ok().body(updatedBrand);
+            return ResponseEntity.ok(updatedBrand);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
