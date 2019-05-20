@@ -1,8 +1,10 @@
 package com.laptopshop.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,6 +17,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotBlank(message = "Category name is required")
     private String name;
 
     @JsonIgnore
@@ -40,6 +43,7 @@ public class Category {
         return id;
     }
 
+    @ApiModelProperty(hidden = true)
     public void setId(Integer id) {
         this.id = id;
     }

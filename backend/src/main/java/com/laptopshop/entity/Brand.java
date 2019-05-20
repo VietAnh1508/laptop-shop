@@ -1,8 +1,10 @@
 package com.laptopshop.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Entity
@@ -13,6 +15,7 @@ public class Brand {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotBlank(message = "Brand name is required")
     private String name;
 
     private String logoImagePath;
@@ -33,6 +36,7 @@ public class Brand {
         return id;
     }
 
+    @ApiModelProperty(hidden = true)
     public void setId(Integer id) {
         this.id = id;
     }

@@ -14,7 +14,7 @@ public interface BrandService {
 
     Brand create(Brand newBrand);
 
-    Brand update(Brand brand) throws ResourceNotFoundException;
+    Brand update(Integer id, Brand brand) throws ResourceNotFoundException;
 
     void deleteById(Integer id);
 

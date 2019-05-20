@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Api(value = "Brand")
@@ -34,20 +35,20 @@ public class BrandResource {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "Add a new brand")
-    public ResponseEntity addNewBrand(@RequestBody Brand newBrand) {
+    public ResponseEntity addNewBrand(@Valid @RequestBody Brand newBrand) {
         Brand createdBrand = brandService.create(newBrand);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdBrand);
     }
 
-    @PutMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PutMapping(
+            value = "/{id}",
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "Update brand")
-    public ResponseEntity updateBrand(@RequestBody Brand brand) {
-        try {
-            Brand updatedBrand = brandService.update(brand);
-            return ResponseEntity.ok(updatedBrand);
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity updateBrand(@PathVariable Integer id, @Valid @RequestBody Brand brand)
+            throws ResourceNotFoundException {
+        Brand updatedBrand = brandService.update(id, brand);
+        return ResponseEntity.ok(updatedBrand);
     }
 
     @DeleteMapping(value = "/{id}")

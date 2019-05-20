@@ -31,35 +31,28 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category getById(Integer id) throws ResourceNotFoundException {
         return categoryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Category not found for this id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(Category.class, id));
     }
 
     @Override
-    public Category create(Category newCategory) throws BadRequestException, ResourceNotFoundException {
+    public Category create(Category newCategory) throws ResourceNotFoundException {
         if (newCategory.getParentCategory() != null) {
             Integer parentCategoryId = newCategory.getParentCategory().getId();
 
             Category parentCategory = categoryRepository.findById(parentCategoryId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Parent category not found for this id: " + parentCategoryId));
+                    .orElseThrow(() -> new ResourceNotFoundException(Category.class, parentCategoryId));
 
             newCategory.setParentCategory(parentCategory);
-        }
-
-        if (StringUtils.isEmpty(newCategory.getName())) {
-            throw new BadRequestException("Category name is required");
         }
 
         return categoryRepository.save(newCategory);
     }
 
     @Override
-    public Category update(Integer id, Category category) throws BadRequestException, ResourceNotFoundException {
+    public Category update(Integer id, Category category) throws ResourceNotFoundException {
         Category oldCategory = categoryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Category not found for this id: " + category.getId()));
+                .orElseThrow(() -> new ResourceNotFoundException(Category.class, id));
 
-        if (StringUtils.isEmpty(category.getName())) {
-            throw new BadRequestException("Category name is required");
-        }
         oldCategory.setName(category.getName());
 
         if (CollectionUtils.isNotEmpty(category.getChildCategories())) {

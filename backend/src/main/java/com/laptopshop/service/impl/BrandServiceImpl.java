@@ -36,9 +36,9 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public Brand update(Brand brand) throws ResourceNotFoundException {
-        Brand oldBrand = brandRepository.findById(brand.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Brand not found for this id: " + brand.getId()));
+    public Brand update(Integer id, Brand brand) throws ResourceNotFoundException {
+        Brand oldBrand = brandRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(Brand.class, id));
 
         oldBrand.setName(brand.getName());
         oldBrand.setLogoImagePath(brand.getLogoImagePath());
@@ -48,7 +48,10 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public void deleteById(Integer id) {
-        brandRepository.deleteById(id);
+        Optional<Brand> brand = brandRepository.findById(id);
+        if (brand.isPresent()) {
+            brandRepository.deleteById(id);
+        }
     }
 
 }
