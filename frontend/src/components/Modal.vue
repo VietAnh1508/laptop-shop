@@ -58,11 +58,13 @@ export default {
   },
   methods: {
     close() {
+      this.$refs.form.resetValidation();
       this.$emit("closeModal");
     },
 
     save() {
       if (this.$refs.form.validate()) {
+        this.$refs.form.resetValidation();
         this.$emit("saveItem", {
           id: this.editedItem.id,
           name: this.name

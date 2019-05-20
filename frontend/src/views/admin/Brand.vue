@@ -108,47 +108,53 @@ export default {
     },
 
     async updateBrand(item) {
-      let res = await brandsRepository.update({
-        id: item.id,
-        name: item.name
-      });
+      try {
+        let res = await brandsRepository.update(item.id, {
+          name: item.name
+        });
 
-      if (res.status === 200) {
-        Object.assign(this.brands[this.editedIndex], res.data);
-        this.showNotification("Updated successfully", true);
-      } else {
-        this.showNotification("Error when update brand", false);
+        if (res.status === 200) {
+          Object.assign(this.brands[this.editedIndex], res.data);
+          this.showNotification("Updated successfully", true);
+        }
+      } catch (err) {
+        let errMessage = err.response.data.errors[0];
+        this.showNotification(errMessage, false);
       }
     },
 
     async createBrand(item) {
-      let res = await brandsRepository.create({
-        name: item.name
-      });
+      try {
+        let res = await brandsRepository.create({
+          name: item.name
+        });
 
-      if (res.status === 201) {
-        this.brands.push(res.data);
-        this.showNotification("Added successfully", true);
-      } else {
-        this.showNotification("Error when add brand", false);
+        if (res.status === 201) {
+          this.brands.push(res.data);
+          this.showNotification("Added successfully", true);
+        }
+      } catch (err) {
+        let errMessage = err.response.data.errors[0];
+        this.showNotification(errMessage, false);
       }
     },
 
     async deleteItem(item) {
       const index = this.brands.indexOf(item);
-
-      if (
-        await this.$refs.confirm.open("Delete", "Are you sure?", {
-          color: "red"
-        })
-      ) {
-        let res = await brandsRepository.delete(item.id);
-        if (res.status === 200) {
-          this.brands.splice(index, 1);
-          this.showNotification("Deleted successfully", true);
-        } else {
-          this.showNotification("Error when delete brand", false);
+      try {
+        if (
+          await this.$refs.confirm.open("Delete", "Are you sure?", {
+            color: "red"
+          })
+        ) {
+          let res = await brandsRepository.delete(item.id);
+          if (res.status === 200) {
+            this.brands.splice(index, 1);
+            this.showNotification("Deleted successfully", true);
+          }
         }
+      } catch (err) {
+        this.showNotification("Error when delete brand", false);
       }
     },
 
