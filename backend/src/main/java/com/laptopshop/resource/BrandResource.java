@@ -55,7 +55,7 @@ public class BrandResource {
     @ApiOperation(value = "Delete brand by id")
     public ResponseEntity deleteBrand(@PathVariable Integer id) {
         brandService.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }
