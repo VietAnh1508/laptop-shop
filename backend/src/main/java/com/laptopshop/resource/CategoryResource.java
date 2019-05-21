@@ -33,6 +33,20 @@ public class CategoryResource {
         return ResponseEntity.ok(categories);
     }
 
+    @GetMapping(value = "/parent", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "Get all parent categories")
+    public ResponseEntity getAllParentCategories() {
+        List<Category> categories = categoryService.getAllParentCategories();
+        return ResponseEntity.ok(categories);
+    }
+
+    @GetMapping(value = "/children", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "Get child categories by parent")
+    public ResponseEntity getCategoriesByParent(@RequestParam Integer parentId) {
+        List<Category> categories = categoryService.getChildCategoriesByParent(parentId);
+        return ResponseEntity.ok(categories);
+    }
+
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "Get category by id")
     public ResponseEntity getById(@PathVariable Integer id) throws ResourceNotFoundException {

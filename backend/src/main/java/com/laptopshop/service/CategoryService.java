@@ -9,6 +9,10 @@ public interface CategoryService {
 
     List<Category> getAll();
 
+    List<Category> getAllParentCategories();
+
+    List<Category> getChildCategoriesByParent(Integer id);
+
     Category getById(Integer id) throws ResourceNotFoundException;
 
     Category create(Category newCategory) throws ResourceNotFoundException;

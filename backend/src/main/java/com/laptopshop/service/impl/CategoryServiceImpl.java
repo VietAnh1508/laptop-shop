@@ -29,6 +29,16 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public List<Category> getAllParentCategories() {
+        return categoryRepository.getParentCategories();
+    }
+
+    @Override
+    public List<Category> getChildCategoriesByParent(Integer id) {
+        return categoryRepository.getCategoriesByParentCategoryId(id);
+    }
+
+    @Override
     public Category getById(Integer id) throws ResourceNotFoundException {
         return categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(Category.class, id));
