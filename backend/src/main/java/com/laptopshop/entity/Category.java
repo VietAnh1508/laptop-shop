@@ -1,6 +1,7 @@
 package com.laptopshop.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
@@ -20,7 +21,6 @@ public class Category {
     @NotBlank(message = "Category name is required")
     private String name;
 
-    @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "parent_id")
     private Category parentCategory;
@@ -61,10 +61,12 @@ public class Category {
         this.name = name;
     }
 
+    @JsonIgnore
     public Category getParentCategory() {
         return parentCategory;
     }
 
+    @JsonProperty
     public void setParentCategory(Category parentCategory) {
         this.parentCategory = parentCategory;
     }
