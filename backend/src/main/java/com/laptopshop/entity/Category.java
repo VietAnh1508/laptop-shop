@@ -21,11 +21,11 @@ public class Category {
     @NotBlank(message = "Category name is required")
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "parent_id")
     private Category parentCategory;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentCategory")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "parentCategory")
     private Set<Category> childCategories = new HashSet<>();
 
     @JsonIgnore

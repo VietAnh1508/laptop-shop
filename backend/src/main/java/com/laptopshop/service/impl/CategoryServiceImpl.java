@@ -1,13 +1,11 @@
 package com.laptopshop.service.impl;
 
 import com.laptopshop.entity.Category;
-import com.laptopshop.exception.BadRequestException;
 import com.laptopshop.exception.ResourceNotFoundException;
 import com.laptopshop.repository.CategoryRepository;
 import com.laptopshop.service.CategoryService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
 import java.util.List;
