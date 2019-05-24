@@ -148,7 +148,7 @@ export default {
           })
         ) {
           let res = await brandsRepository.delete(item.id);
-          if (res.status === 200) {
+          if (res.status === 204) {
             this.brands.splice(index, 1);
             this.showNotification("Deleted successfully", true);
           }
