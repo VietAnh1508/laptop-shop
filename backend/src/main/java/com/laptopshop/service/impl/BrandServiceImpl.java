@@ -1,6 +1,7 @@
 package com.laptopshop.service.impl;
 
 import com.laptopshop.entity.Brand;
+import com.laptopshop.exception.BadRequestException;
 import com.laptopshop.exception.ResourceNotFoundException;
 import com.laptopshop.repository.BrandRepository;
 import com.laptopshop.service.BrandService;
@@ -31,14 +32,28 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public Brand create(Brand newBrand) {
+    public Optional<Brand> getByName(String name) {
+        return brandRepository.findByName(name);
+    }
+
+    @Override
+    public Brand create(Brand newBrand) throws BadRequestException {
+        Optional<Brand> optionalBrand = getByName(newBrand.getName());
+        if (optionalBrand.isPresent()) {
+            throw new BadRequestException("Brand's name: " + newBrand.getName() + " is already existed");
+        }
         return brandRepository.save(newBrand);
     }
 
     @Override
-    public Brand update(Integer id, Brand brand) throws ResourceNotFoundException {
+    public Brand update(Integer id, Brand brand) throws ResourceNotFoundException, BadRequestException {
         Brand oldBrand = brandRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(Brand.class, id));
+
+        Optional<Brand> possibleDuplicateName = getByName(brand.getName());
+        if (possibleDuplicateName.isPresent()) {
+            throw new BadRequestException("Brand's name: " + brand.getName() + " is already existed");
+        }
 
         oldBrand.setName(brand.getName());
         oldBrand.setLogoImagePath(brand.getLogoImagePath());

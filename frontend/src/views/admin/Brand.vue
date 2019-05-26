@@ -4,14 +4,11 @@
       <v-toolbar-title>Brand</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn color="primary" dark class="mb-2" @click.stop="isShowForm = true">New Item</v-btn>
-      <Modal
-        v-model="isShowForm"
-        :title="formTitle"
-        :editedItem="editedItem"
-        @closeModal="close"
-        @saveItem="save"
-      />
     </v-toolbar>
+
+    <Modal v-model="isShowForm" :title="formTitle" @closeModal="close" @saveItem="save">
+      <v-text-field v-model="editedItem.name" label="Name"></v-text-field>
+    </Modal>
 
     <v-data-table :headers="headers" :items="brands" :loading="isLoading">
       <template v-slot:items="props">
@@ -25,6 +22,7 @@
     </v-data-table>
 
     <Notification v-model="showMessage" :message="crudMessage" :isSuccess="isCrudSuccess"/>
+
     <Confirm ref="confirm"/>
   </div>
 </template>
@@ -98,19 +96,19 @@ export default {
       }, 300);
     },
 
-    save(item) {
+    save() {
       if (this.editedIndex > -1) {
-        this.updateBrand(item);
+        this.updateBrand();
       } else {
-        this.createBrand(item);
+        this.createBrand();
       }
       this.close();
     },
 
-    async updateBrand(item) {
+    async updateBrand() {
       try {
-        let res = await brandsRepository.update(item.id, {
-          name: item.name
+        let res = await brandsRepository.update(this.editedItem.id, {
+          name: this.editedItem.name
         });
 
         if (res.status === 200) {
@@ -118,15 +116,14 @@ export default {
           this.showNotification("Updated successfully", true);
         }
       } catch (err) {
-        let errMessage = err.response.data.errors[0];
-        this.showNotification(errMessage, false);
+        this.handleException(err);
       }
     },
 
-    async createBrand(item) {
+    async createBrand() {
       try {
         let res = await brandsRepository.create({
-          name: item.name
+          name: this.editedItem.name
         });
 
         if (res.status === 201) {
@@ -134,8 +131,7 @@ export default {
           this.showNotification("Added successfully", true);
         }
       } catch (err) {
-        let errMessage = err.response.data.errors[0];
-        this.showNotification(errMessage, false);
+        this.handleException(err);
       }
     },
 
@@ -156,6 +152,12 @@ export default {
       } catch (err) {
         this.showNotification("Error when delete brand", false);
       }
+    },
+
+    handleException(err) {
+      const data = err.response.data;
+      const errMessage = data.message || data.errors[0];
+      this.showNotification(errMessage, false);
     },
 
     showNotification(message, isSuccess) {

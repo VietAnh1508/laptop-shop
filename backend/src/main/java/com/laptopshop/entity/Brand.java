@@ -16,6 +16,7 @@ public class Brand {
     private Integer id;
 
     @NotBlank(message = "Brand name is required")
+    @Column(unique = true)
     private String name;
 
     private String logoImagePath;

@@ -1,6 +1,7 @@
 package com.laptopshop.resource;
 
 import com.laptopshop.entity.Brand;
+import com.laptopshop.exception.BadRequestException;
 import com.laptopshop.exception.ResourceNotFoundException;
 import com.laptopshop.service.BrandService;
 import io.swagger.annotations.Api;
@@ -35,7 +36,7 @@ public class BrandResource {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "Add a new brand")
-    public ResponseEntity addNewBrand(@Valid @RequestBody Brand newBrand) {
+    public ResponseEntity addNewBrand(@Valid @RequestBody Brand newBrand) throws BadRequestException {
         Brand createdBrand = brandService.create(newBrand);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdBrand);
     }
@@ -46,7 +47,7 @@ public class BrandResource {
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "Update brand")
     public ResponseEntity updateBrand(@PathVariable Integer id, @Valid @RequestBody Brand brand)
-            throws ResourceNotFoundException {
+            throws ResourceNotFoundException, BadRequestException {
         Brand updatedBrand = brandService.update(id, brand);
         return ResponseEntity.ok(updatedBrand);
     }

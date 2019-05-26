@@ -4,16 +4,16 @@
       <v-card-title>
         <span class="title">{{ title }}</span>
       </v-card-title>
-      <v-card-text>
-        <v-form class="px-3" ref="form">
-          <v-text-field v-model="itemName" label="Name" :rules="inputRules"></v-text-field>
-        </v-form>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
-        <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
-      </v-card-actions>
+      <v-form class="px-3">
+        <v-card-text>
+          <slot></slot>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="grey darken-1" flat @click="close">Cancel</v-btn>
+          <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
+        </v-card-actions>
+      </v-form>
     </v-card>
   </v-dialog>
 </template>
@@ -26,17 +26,7 @@ export default {
     },
     value: {
       type: Boolean
-    },
-    editedItem: {
-      id: Number,
-      name: String
     }
-  },
-  data() {
-    return {
-      name: "",
-      inputRules: [v => v !== "" || "Name is required"]
-    };
   },
   computed: {
     isShow: {
@@ -58,18 +48,11 @@ export default {
   },
   methods: {
     close() {
-      this.$refs.form.resetValidation();
       this.$emit("closeModal");
     },
 
     save() {
-      if (this.$refs.form.validate()) {
-        this.$refs.form.resetValidation();
-        this.$emit("saveItem", {
-          id: this.editedItem.id,
-          name: this.name
-        });
-      }
+      this.$emit("saveItem");
     }
   }
 };
