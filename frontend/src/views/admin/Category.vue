@@ -62,6 +62,8 @@ import Confirm from "@/components/Confirm";
 import { RepositoryFactory } from "@/repository/repositoryFactory";
 const categoriesRepository = RepositoryFactory.get("categories");
 
+import exceptionHandleMixin from "@/mixins/exceptionHandleMixin";
+
 export default {
   components: {
     DataTableToolbar,
@@ -69,6 +71,8 @@ export default {
     Notification,
     Confirm
   },
+
+  mixins: [exceptionHandleMixin],
 
   data: () => ({
     headers: [
@@ -258,12 +262,6 @@ export default {
       this.editedItem.name = "";
       this.isAddChild = true;
       this.isShowForm = true;
-    },
-
-    handleException(err) {
-      const data = err.response.data;
-      const errMessage = data.message || data.errors[0];
-      this.showNotification(errMessage, false);
     },
 
     showNotification(message, isSuccess) {

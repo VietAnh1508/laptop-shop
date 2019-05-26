@@ -28,9 +28,11 @@ import DataTableToolbar from "@/components/DataTableToolbar";
 import Modal from "@/components/Modal";
 import Notification from "@/components/Notification";
 import Confirm from "@/components/Confirm";
-import { RepositoryFactory } from "@/repository/repositoryFactory";
 
+import { RepositoryFactory } from "@/repository/repositoryFactory";
 const brandsRepository = RepositoryFactory.get("brands");
+
+import exceptionHandleMixin from "@/mixins/exceptionHandleMixin";
 
 export default {
   components: {
@@ -39,6 +41,9 @@ export default {
     Notification,
     Confirm
   },
+
+  mixins: [exceptionHandleMixin],
+
   data: () => ({
     headers: [
       { text: "No", value: "no" },
@@ -150,12 +155,6 @@ export default {
       } catch (err) {
         this.showNotification("Error when delete brand", false);
       }
-    },
-
-    handleException(err) {
-      const data = err.response.data;
-      const errMessage = data.message || data.errors[0];
-      this.showNotification(errMessage, false);
     },
 
     showNotification(message, isSuccess) {
