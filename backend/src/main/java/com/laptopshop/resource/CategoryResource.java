@@ -67,7 +67,7 @@ public class CategoryResource {
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "Update category")
-    public ResponseEntity updateCategory(@PathVariable Integer id, @RequestBody Category category)
+    public ResponseEntity updateCategory(@PathVariable Integer id, @Valid @RequestBody Category category)
             throws ResourceNotFoundException {
         Category editedCategory = categoryService.update(id, category);
         return ResponseEntity.ok(editedCategory);

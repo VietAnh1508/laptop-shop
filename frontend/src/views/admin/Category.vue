@@ -5,13 +5,10 @@
       <v-spacer></v-spacer>
       <v-btn color="primary" dark class="mb-2" @click.stop="isShowForm = true">New Item</v-btn>
     </v-toolbar>
-    <Modal
-      v-model="isShowForm"
-      :title="formTitle"
-      :editedItem="editedItem"
-      @closeModal="close"
-      @saveItem="save"
-    />
+
+    <Modal v-model="isShowForm" :title="formTitle" @closeModal="close" @saveItem="save">
+      <v-text-field v-model="editedItem.name" label="Name"></v-text-field>
+    </Modal>
 
     <v-data-table :headers="headers" :items="categories" :expand="false" :loading="isLoading">
       <template v-slot:items="props">
@@ -151,30 +148,30 @@ export default {
       }, 300);
     },
 
-    save(item) {
+    save() {
       if (this.editedIndex == -1) {
         if (this.isAddChild) {
-          this.createChildCategory(item);
+          this.createChildCategory();
           this.isAddChild = false;
         } else {
-          this.createCategory(item);
+          this.createCategory();
         }
       } else {
         if (this.isEditChild) {
-          this.updateChildCategory(item);
+          this.updateChildCategory();
           this.isEditChild = false;
         } else {
-          this.updateCategory(item);
+          this.updateCategory();
         }
       }
 
       this.close();
     },
 
-    async updateCategory(item) {
+    async updateCategory() {
       try {
-        let res = await categoriesRepository.update(item.id, {
-          name: item.name
+        let res = await categoriesRepository.update(this.editedItem.id, {
+          name: this.editedItem.name
         });
 
         if (res.status === 200) {
@@ -182,15 +179,14 @@ export default {
           this.showNotification("Updated successfully", true);
         }
       } catch (err) {
-        let errMessage = err.response.data.errors[0];
-        this.showNotification(errMessage, false);
+        this.handleException(err);
       }
     },
 
-    async updateChildCategory(item) {
+    async updateChildCategory() {
       try {
-        let res = await categoriesRepository.update(item.id, {
-          name: item.name
+        let res = await categoriesRepository.update(this.editedItem.id, {
+          name: this.editedItem.name
         });
 
         if (res.status === 200) {
@@ -198,15 +194,14 @@ export default {
           this.showNotification("Updated successfully", true);
         }
       } catch (err) {
-        let errMessage = err.response.data.errors[0];
-        this.showNotification(errMessage, false);
+        this.handleException(err);
       }
     },
 
-    async createCategory(item) {
+    async createCategory() {
       try {
         let res = await categoriesRepository.create({
-          name: item.name
+          name: this.editedItem.name
         });
 
         if (res.status === 201) {
@@ -214,17 +209,16 @@ export default {
           this.showNotification("Added successfully", true);
         }
       } catch (err) {
-        let errMessage = err.response.data.errors[0];
-        this.showNotification(errMessage, false);
+        this.handleException(err);
       }
     },
 
-    async createChildCategory(item) {
+    async createChildCategory() {
       try {
         let res = await categoriesRepository.create({
-          name: item.name,
+          name: this.editedItem.name,
           parentCategory: {
-            id: item.id
+            id: this.editedItem.id
           }
         });
 
@@ -233,13 +227,11 @@ export default {
           this.showNotification("Added successfully", true);
         }
       } catch (err) {
-        let errMessage = err.response.data.errors[0];
-        this.showNotification(errMessage, false);
+        this.handleException(err);
       }
     },
 
     async deleteItem(item, isDeleteChild) {
-      console.log(item);
       const index = isDeleteChild
         ? this.childCategories.indexOf(item)
         : this.categories.indexOf(item);
@@ -270,6 +262,12 @@ export default {
       this.editedItem.name = "";
       this.isAddChild = true;
       this.isShowForm = true;
+    },
+
+    handleException(err) {
+      const data = err.response.data;
+      const errMessage = data.message || data.errors[0];
+      this.showNotification(errMessage, false);
     },
 
     showNotification(message, isSuccess) {
