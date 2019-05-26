@@ -1,10 +1,6 @@
 <template>
   <div>
-    <v-toolbar flat color="white">
-      <v-toolbar-title>Brand</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn color="primary" dark class="mb-2" @click.stop="isShowForm = true">New Item</v-btn>
-    </v-toolbar>
+    <DataTableToolbar title="Brand" buttonLabel="New item" @showForm="isShowForm = true"/>
 
     <Modal v-model="isShowForm" :title="formTitle" @closeModal="close" @saveItem="save">
       <v-text-field v-model="editedItem.name" label="Name"></v-text-field>
@@ -28,6 +24,7 @@
 </template>
 
 <script>
+import DataTableToolbar from "@/components/DataTableToolbar";
 import Modal from "@/components/Modal";
 import Notification from "@/components/Notification";
 import Confirm from "@/components/Confirm";
@@ -37,6 +34,7 @@ const brandsRepository = RepositoryFactory.get("brands");
 
 export default {
   components: {
+    DataTableToolbar,
     Modal,
     Notification,
     Confirm

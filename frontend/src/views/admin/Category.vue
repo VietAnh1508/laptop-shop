@@ -1,10 +1,6 @@
 <template>
   <div>
-    <v-toolbar flat color="white">
-      <v-toolbar-title>Category</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn color="primary" dark class="mb-2" @click.stop="isShowForm = true">New Item</v-btn>
-    </v-toolbar>
+    <DataTableToolbar title="Category" buttonLabel="New item" @showForm="isShowForm = true"/>
 
     <Modal v-model="isShowForm" :title="formTitle" @closeModal="close" @saveItem="save">
       <v-text-field v-model="editedItem.name" label="Name"></v-text-field>
@@ -24,14 +20,11 @@
       <template v-slot:expand="props">
         <v-card class="elevation-10">
           <v-card-title>
-            <h3>Child categories</h3>
-            <v-spacer></v-spacer>
-            <v-btn
-              color="primary"
-              dark
-              class="mb-2"
-              @click.stop="addChild(props.item)"
-            >Add child category</v-btn>
+            <DataTableToolbar
+              title="Child categories"
+              buttonLabel="Add child category"
+              @showForm="addChild(props.item)"
+            />
           </v-card-title>
           <v-card-text>
             <v-data-table
@@ -55,11 +48,13 @@
     </v-data-table>
 
     <Notification v-model="showMessage" :message="crudMessage" :isSuccess="isCrudSuccess"/>
+
     <Confirm ref="confirm"/>
   </div>
 </template>
 
 <script>
+import DataTableToolbar from "@/components/DataTableToolbar";
 import Modal from "@/components/Modal";
 import Notification from "@/components/Notification";
 import Confirm from "@/components/Confirm";
@@ -69,6 +64,7 @@ const categoriesRepository = RepositoryFactory.get("categories");
 
 export default {
   components: {
+    DataTableToolbar,
     Modal,
     Notification,
     Confirm
