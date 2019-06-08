@@ -1,4 +1,4 @@
-package com.laptopshop.resource;
+package com.laptopshop.controller;
 
 import com.laptopshop.entity.Brand;
 import com.laptopshop.exception.BadRequestException;
@@ -18,12 +18,12 @@ import java.util.List;
 @Api(value = "Brand")
 @RestController
 @RequestMapping("/brands")
-public class BrandResource {
+public class BrandController {
 
     private BrandService brandService;
 
     @Autowired
-    public BrandResource(BrandService brandService) {
+    public BrandController(BrandService brandService) {
         this.brandService = brandService;
     }
 

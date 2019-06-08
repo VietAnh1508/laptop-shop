@@ -1,4 +1,4 @@
-package com.laptopshop.resource.exceptionhandler;
+package com.laptopshop.controller.exceptionhandler;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;

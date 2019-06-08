@@ -1,4 +1,4 @@
-package com.laptopshop.resource;
+package com.laptopshop.controller;
 
 import com.laptopshop.entity.Category;
 import com.laptopshop.exception.ResourceNotFoundException;
@@ -17,12 +17,12 @@ import java.util.List;
 @Api(value = "Category")
 @RestController
 @RequestMapping("/categories")
-public class CategoryResource {
+public class CategoryController {
 
     private CategoryService categoryService;
 
     @Autowired
-    public CategoryResource(CategoryService categoryService) {
+    public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
 

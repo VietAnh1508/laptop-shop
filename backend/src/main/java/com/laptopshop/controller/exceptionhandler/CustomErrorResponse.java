@@ -1,4 +1,4 @@
-package com.laptopshop.resource.exceptionhandler;
+package com.laptopshop.controller.exceptionhandler;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
