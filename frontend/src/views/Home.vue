@@ -113,6 +113,7 @@
       </v-layout>
     </v-container>
     <app-footer/>
+    <scroll-to-top-button/>
   </div>
 </template>
 
@@ -121,6 +122,7 @@ import Toolbar from "@/components/Toolbar";
 import Carousel from "@/components/Carousel";
 import Navigate from "@/components/Navigate";
 import HomeProductList from "@/components/HomeProductList";
+import ScrollToTopButton from "@/components/ScrollToTopButton";
 import AppFooter from "@/components/AppFooter";
 
 export default {
@@ -129,6 +131,7 @@ export default {
     carousel: Carousel,
     navigate: Navigate,
     "home-product-list": HomeProductList,
+    "scroll-to-top-button": ScrollToTopButton,
     "app-footer": AppFooter
   },
   computed: {
