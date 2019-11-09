@@ -1,5 +1,6 @@
 package com.laptopshop;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,11 +11,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @SpringBootApplication
 public class BackendApplication implements WebMvcConfigurer {
 
-    private static final String API_PATH_PREFIX = "/api";
+    @Value("${api.path.prefix}")
+    private String apiPathPrefix;
 
     @Override
     public void configurePathMatch(PathMatchConfigurer configurer) {
-        configurer.addPathPrefix(API_PATH_PREFIX, c -> c.isAnnotationPresent(RestController.class));
+        configurer.addPathPrefix(apiPathPrefix, c -> c.isAnnotationPresent(RestController.class));
     }
 
     @Override
