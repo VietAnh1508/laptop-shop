@@ -1,10 +1,14 @@
 package com.laptopshop.service.impl;
 
+import com.laptopshop.dto.BrandDto;
 import com.laptopshop.entity.Brand;
 import com.laptopshop.exception.BadRequestException;
 import com.laptopshop.exception.ResourceNotFoundException;
 import com.laptopshop.repository.BrandRepository;
 import com.laptopshop.service.BrandService;
+import org.apache.logging.log4j.util.Strings;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -15,50 +19,71 @@ import java.util.Optional;
 @Transactional
 public class BrandServiceImpl implements BrandService {
 
-    private final BrandRepository brandRepository;
+    @Autowired
+    private BrandRepository brandRepository;
 
-    public BrandServiceImpl(BrandRepository brandRepository) {
-        this.brandRepository = brandRepository;
+    @Autowired
+    private ModelMapper modelMapper;
+
+    @Override
+    public List<BrandDto> getAll() {
+        return brandRepository.getAll();
     }
 
     @Override
-    public List<Brand> getAll() {
-        return brandRepository.findAll();
+    public BrandDto getById(Integer id) throws ResourceNotFoundException {
+        Brand brand = brandRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(Brand.class, id));
+        return modelMapper.map(brand, BrandDto.class);
     }
 
     @Override
-    public Optional<Brand> getById(Integer id) {
-        return brandRepository.findById(id);
+    public BrandDto getByName(String name) throws ResourceNotFoundException {
+        Brand brand = getByNameOptional(name)
+                .orElseThrow(() -> new ResourceNotFoundException(Brand.class, "name", name));
+        return modelMapper.map(brand, BrandDto.class);
     }
 
-    @Override
-    public Optional<Brand> getByName(String name) {
+    private Optional<Brand> getByNameOptional(String name) {
         return brandRepository.findByName(name);
     }
 
     @Override
-    public Brand create(Brand newBrand) throws BadRequestException {
-        Optional<Brand> optionalBrand = getByName(newBrand.getName());
-        if (optionalBrand.isPresent()) {
-            throw new BadRequestException("Brand's name: " + newBrand.getName() + " is already existed");
+    public BrandDto create(BrandDto newBrand) throws BadRequestException {
+        String newBrandName = newBrand.getName();
+        if (Strings.isEmpty(newBrandName)) {
+            throw new BadRequestException("Brand's name is required");
         }
-        return brandRepository.save(newBrand);
+
+        Optional<Brand> optionalBrand = getByNameOptional(newBrandName);
+        if (optionalBrand.isPresent()) {
+            throw new BadRequestException("Brand's name: " + newBrandName + " is already existed");
+        }
+
+        Brand createdBrand = brandRepository.save(modelMapper.map(newBrand, Brand.class));
+        return modelMapper.map(createdBrand, BrandDto.class);
     }
 
     @Override
-    public Brand update(Integer id, Brand brand) throws ResourceNotFoundException, BadRequestException {
+    public BrandDto update(Integer id, BrandDto brand) throws ResourceNotFoundException, BadRequestException {
         Brand oldBrand = brandRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(Brand.class, id));
 
-        Optional<Brand> possibleDuplicateName = getByName(brand.getName());
-        if (possibleDuplicateName.isPresent()) {
-            throw new BadRequestException("Brand's name: " + brand.getName() + " is already existed");
+        String newBrandName = brand.getName();
+        if (Strings.isNotEmpty(newBrandName)) {
+            Optional<Brand> possibleDuplicateName = getByNameOptional(newBrandName);
+            if (possibleDuplicateName.isPresent()) {
+                throw new BadRequestException("Brand's name: " + newBrandName + " is already existed");
+            }
+
+            oldBrand.setName(newBrandName);
         }
 
-        oldBrand.setName(brand.getName());
-        oldBrand.setLogoImagePath(brand.getLogoImagePath());
+        if (Strings.isNotBlank(brand.getLogoImagePath())) {
+            oldBrand.setLogoImagePath(brand.getLogoImagePath());
+        }
 
-        return brandRepository.save(oldBrand);
+        return modelMapper.map(brandRepository.save(oldBrand), BrandDto.class);
     }
 
     @Override

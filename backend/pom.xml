@@ -11,13 +11,13 @@
     <groupId>com.laptopshop</groupId>
     <artifactId>backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>backend</name>
+    <name>Laptop Shop API</name>
     <description>Laptop shop REST api</description>
+    <packaging>war</packaging>
 
     <properties>
         <java.version>1.8</java.version>
         <springfox.version>2.9.2</springfox.version>
-        <apache.commons.collections.version>4.3</apache.commons.collections.version>
     </properties>
 
     <dependencies>
@@ -32,14 +32,23 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Database -->
+        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
+
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
             <scope>test</scope>
+            <version>1.4.199</version>
         </dependency>
 
         <!-- Swagger -->
@@ -65,7 +74,21 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
-            <version>${apache.commons.collections.version}</version>
+            <version>4.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>2.3.5</version>
+        </dependency>
+
+        <!-- Testing -->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.14.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

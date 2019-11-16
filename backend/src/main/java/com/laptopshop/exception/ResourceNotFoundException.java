@@ -10,4 +10,8 @@ public class ResourceNotFoundException extends Exception {
         super(entity.getSimpleName() + " with id: " + id + " not found");
     }
 
+    public ResourceNotFoundException(Class entity, String propertyName, String propertyValue) {
+        super(entity.getSimpleName() + " with " + propertyName + ": " + propertyValue + " not found");
+    }
+
 }

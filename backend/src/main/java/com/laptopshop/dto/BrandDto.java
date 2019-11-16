@@ -1,30 +1,33 @@
-package com.laptopshop.entity;
+package com.laptopshop.dto;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.laptopshop.entity.Product;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
-@Entity
-@Table(name = "brand")
-public class Brand {
+public class BrandDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotBlank(message = "Brand name is required")
-    @Column(nullable = false, unique = true)
     private String name;
 
     private String logoImagePath;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "brand")
     private List<Product> productList;
 
-    public Brand() {
+    public BrandDto() {
     }
 
-    public Brand(String name, String logoImagePath) {
+    public BrandDto(String name, String logoImagePath) {
+        this.name = name;
+        this.logoImagePath = logoImagePath;
+    }
+
+    public BrandDto(Integer id, String name, String logoImagePath) {
+        this.id = id;
         this.name = name;
         this.logoImagePath = logoImagePath;
     }
@@ -33,6 +36,7 @@ public class Brand {
         return id;
     }
 
+    @ApiModelProperty(hidden = true)
     public void setId(Integer id) {
         this.id = id;
     }
@@ -53,10 +57,12 @@ public class Brand {
         this.logoImagePath = logoImagePath;
     }
 
+    @JsonIgnore
     public List<Product> getProductList() {
         return productList;
     }
 
+    @ApiModelProperty(hidden = true)
     public void setProductList(List<Product> productList) {
         this.productList = productList;
     }

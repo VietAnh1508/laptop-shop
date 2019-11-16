@@ -1,23 +1,22 @@
 package com.laptopshop.service;
 
-import com.laptopshop.entity.Brand;
+import com.laptopshop.dto.BrandDto;
 import com.laptopshop.exception.BadRequestException;
 import com.laptopshop.exception.ResourceNotFoundException;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface BrandService {
 
-    List<Brand> getAll();
+    List<BrandDto> getAll();
 
-    Optional<Brand> getById(Integer id);
+    BrandDto getById(Integer id) throws ResourceNotFoundException;
 
-    Optional<Brand> getByName(String name);
+    BrandDto getByName(String name) throws ResourceNotFoundException;
 
-    Brand create(Brand newBrand) throws BadRequestException;
+    BrandDto create(BrandDto newBrand) throws BadRequestException;
 
-    Brand update(Integer id, Brand brand) throws ResourceNotFoundException, BadRequestException;
+    BrandDto update(Integer id, BrandDto brand) throws ResourceNotFoundException, BadRequestException;
 
     void deleteById(Integer id);
 

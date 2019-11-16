@@ -1,12 +1,11 @@
 package com.laptopshop.controller;
 
-import com.laptopshop.entity.Brand;
+import com.laptopshop.dto.BrandDto;
 import com.laptopshop.exception.BadRequestException;
 import com.laptopshop.exception.ResourceNotFoundException;
 import com.laptopshop.service.BrandService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +21,6 @@ public class BrandController {
 
     private BrandService brandService;
 
-    @Autowired
     public BrandController(BrandService brandService) {
         this.brandService = brandService;
     }
@@ -30,14 +28,21 @@ public class BrandController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "Get all brands")
     public ResponseEntity getAllBrands() {
-        List<Brand> brands = brandService.getAll();
+        List<BrandDto> brands = brandService.getAll();
         return ResponseEntity.ok(brands);
+    }
+
+    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "Get brand by id")
+    public ResponseEntity getBrandById(@PathVariable Integer id) throws ResourceNotFoundException {
+        BrandDto brand = brandService.getById(id);
+        return ResponseEntity.ok(brand);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "Add a new brand")
-    public ResponseEntity addNewBrand(@Valid @RequestBody Brand newBrand) throws BadRequestException {
-        Brand createdBrand = brandService.create(newBrand);
+    public ResponseEntity addNewBrand(@Valid @RequestBody BrandDto newBrand) throws BadRequestException {
+        BrandDto createdBrand = brandService.create(newBrand);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdBrand);
     }
 
@@ -46,9 +51,9 @@ public class BrandController {
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "Update brand")
-    public ResponseEntity updateBrand(@PathVariable Integer id, @Valid @RequestBody Brand brand)
+    public ResponseEntity updateBrand(@PathVariable Integer id, @RequestBody BrandDto brand)
             throws ResourceNotFoundException, BadRequestException {
-        Brand updatedBrand = brandService.update(id, brand);
+        BrandDto updatedBrand = brandService.update(id, brand);
         return ResponseEntity.ok(updatedBrand);
     }
 
