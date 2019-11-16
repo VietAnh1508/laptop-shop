@@ -1,23 +1,24 @@
 package com.laptopshop.service;
 
-import com.laptopshop.entity.Category;
+import com.laptopshop.dto.CategoryDto;
+import com.laptopshop.exception.BadRequestException;
 import com.laptopshop.exception.ResourceNotFoundException;
 
 import java.util.List;
 
 public interface CategoryService {
 
-    List<Category> getAll();
+    List<CategoryDto> getAll();
 
-    List<Category> getAllParentCategories();
+    List<CategoryDto> getAllParentCategories();
 
-    List<Category> getChildCategoriesByParent(Integer id);
+    List<CategoryDto> getChildCategoriesByParent(Integer id);
 
-    Category getById(Integer id) throws ResourceNotFoundException;
+    CategoryDto getById(Integer id) throws ResourceNotFoundException;
 
-    Category create(Category newCategory) throws ResourceNotFoundException;
+    CategoryDto create(CategoryDto newCategory) throws BadRequestException;
 
-    Category update(Integer id, Category category) throws ResourceNotFoundException;
+    CategoryDto update(Integer id, CategoryDto category) throws ResourceNotFoundException;
 
     void deleteById(Integer id);
 

@@ -1,49 +1,49 @@
-package com.laptopshop.entity;
+package com.laptopshop.dto;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.laptopshop.entity.Category;
+import com.laptopshop.entity.Product;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Entity
-@Table(name = "category")
-public class Category {
+public class CategoryDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotBlank(message = "Category name is required")
-    @Column(nullable = false)
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "parent_id")
     private Category parentCategory;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "parentCategory")
-    private Set<Category> childCategories = new HashSet<>();
+    private Set<Category> subCategories = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
+    @JsonIgnore
     private List<Product> productList;
 
-    public Category() {
+    public CategoryDto() {
     }
 
-    public Category(String name) {
-        this.name = name;
-    }
-
-    public Category(Integer id, String name) {
+    public CategoryDto(Integer id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public CategoryDto(Integer id, String name, Category parentCategory) {
+        this.id = id;
+        this.name = name;
+        this.parentCategory = parentCategory;
     }
 
     public Integer getId() {
         return id;
     }
 
+    @ApiModelProperty(hidden = true)
     public void setId(Integer id) {
         this.id = id;
     }
@@ -56,20 +56,22 @@ public class Category {
         this.name = name;
     }
 
+    @JsonIgnore
     public Category getParentCategory() {
         return parentCategory;
     }
 
+    @JsonProperty
     public void setParentCategory(Category parentCategory) {
         this.parentCategory = parentCategory;
     }
 
-    public Set<Category> getChildCategories() {
-        return childCategories;
+    public Set<Category> getSubCategories() {
+        return subCategories;
     }
 
-    public void setChildCategories(Set<Category> childCategories) {
-        this.childCategories = childCategories;
+    public void setSubCategories(Set<Category> subCategories) {
+        this.subCategories = subCategories;
     }
 
     public List<Product> getProductList() {
