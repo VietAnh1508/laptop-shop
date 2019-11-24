@@ -1,8 +1,17 @@
 <template>
   <div>
-    <DataTableToolbar title="Brand" buttonLabel="New item" @showForm="isShowForm = true"/>
+    <DataTableToolbar
+      title="Brand"
+      buttonLabel="New item"
+      @showForm="isShowForm = true"
+    />
 
-    <Modal v-model="isShowForm" :title="formTitle" @closeModal="close" @saveItem="save">
+    <Modal
+      v-model="isShowForm"
+      :title="formTitle"
+      @closeModal="close"
+      @saveItem="save"
+    >
       <v-text-field v-model="editedItem.name" label="Name"></v-text-field>
     </Modal>
 
@@ -17,22 +26,26 @@
       </template>
     </v-data-table>
 
-    <Notification v-model="showMessage" :message="crudMessage" :isSuccess="isCrudSuccess"/>
+    <Notification
+      v-model="showMessage"
+      :message="crudMessage"
+      :isSuccess="isCrudSuccess"
+    />
 
-    <Confirm ref="confirm"/>
+    <Confirm ref="confirm" />
   </div>
 </template>
 
 <script>
-import DataTableToolbar from "@/components/DataTableToolbar";
-import Modal from "@/components/Modal";
-import Notification from "@/components/Notification";
-import Confirm from "@/components/Confirm";
+import DataTableToolbar from '@/components/DataTableToolbar';
+import Modal from '@/components/Modal';
+import Notification from '@/components/Notification';
+import Confirm from '@/components/Confirm';
 
-import { RepositoryFactory } from "@/repository/repositoryFactory";
-const brandsRepository = RepositoryFactory.get("brands");
+import { RepositoryFactory } from '@/repository/repositoryFactory';
+const brandsRepository = RepositoryFactory.get('brands');
 
-import exceptionHandleMixin from "@/mixins/exceptionHandleMixin";
+import exceptionHandleMixin from '@/mixins/exceptionHandleMixin';
 
 export default {
   components: {
@@ -46,30 +59,30 @@ export default {
 
   data: () => ({
     headers: [
-      { text: "No", value: "no" },
-      { text: "Brand", value: "name" },
-      { text: "Actions", align: "center", value: "name", sortable: false }
+      { text: 'No', value: 'no' },
+      { text: 'Brand', value: 'name' },
+      { text: 'Actions', align: 'center', value: 'name', sortable: false }
     ],
     brands: [],
     isShowForm: false,
     editedIndex: -1,
     editedItem: {
-      id: "",
-      name: ""
+      id: '',
+      name: ''
     },
     defaultItem: {
-      id: "",
-      name: ""
+      id: '',
+      name: ''
     },
     isLoading: false,
     showMessage: false,
     isCrudSuccess: false,
-    crudMessage: ""
+    crudMessage: ''
   }),
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "New brand" : "Edit brand";
+      return this.editedIndex === -1 ? 'New brand' : 'Edit brand';
     }
   },
 
@@ -116,7 +129,7 @@ export default {
 
         if (res.status === 200) {
           Object.assign(this.brands[this.editedIndex], res.data);
-          this.showNotification("Updated successfully", true);
+          this.showNotification('Updated successfully', true);
         }
       } catch (err) {
         this.handleException(err);
@@ -131,7 +144,7 @@ export default {
 
         if (res.status === 201) {
           this.brands.push(res.data);
-          this.showNotification("Added successfully", true);
+          this.showNotification('Added successfully', true);
         }
       } catch (err) {
         this.handleException(err);
@@ -142,18 +155,18 @@ export default {
       const index = this.brands.indexOf(item);
       try {
         if (
-          await this.$refs.confirm.open("Delete", "Are you sure?", {
-            color: "red"
+          await this.$refs.confirm.open('Delete', 'Are you sure?', {
+            color: 'red'
           })
         ) {
           let res = await brandsRepository.delete(item.id);
           if (res.status === 204) {
             this.brands.splice(index, 1);
-            this.showNotification("Deleted successfully", true);
+            this.showNotification('Deleted successfully', true);
           }
         }
       } catch (err) {
-        this.showNotification("Error when delete brand", false);
+        this.showNotification('Error when delete brand', false);
       }
     },
 

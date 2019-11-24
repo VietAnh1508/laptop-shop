@@ -10,29 +10,29 @@
         </v-flex>
       </v-layout>
       <v-list>
-        <v-list-tile
+        <v-list-item
           v-for="link in links"
           :key="link.text"
           router
           :to="link.route"
         >
-          <v-list-tile-action>
+          <v-list-item-action>
             <v-icon class="white--text">{{ link.icon }}</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title class="white--text">
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title class="white--text">
               {{ link.text }}
-            </v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
 
-    <v-toolbar flat app>
-      <v-toolbar-side-icon
+    <v-app-bar flat>
+      <v-app-bar-nav-icon
         class="grey--text"
         @click="drawer = !drawer"
-      ></v-toolbar-side-icon>
+      ></v-app-bar-nav-icon>
       <v-toolbar-title class="text-uppercase">
         <span class="font-weight-light mr-1">Admin</span>
         <span>management</span>
@@ -40,11 +40,11 @@
 
       <v-spacer />
 
-      <v-btn flat color="grey">
+      <v-btn text color="grey">
         <span class="mr-1">Sign out</span>
         <v-icon grey>exit_to_app</v-icon>
       </v-btn>
-    </v-toolbar>
+    </v-app-bar>
   </nav>
 </template>
 
