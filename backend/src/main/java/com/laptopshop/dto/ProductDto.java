@@ -1,48 +1,29 @@
-package com.laptopshop.entity;
+package com.laptopshop.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
+public class ProductDto {
 
-@Entity
-@Table(name = "product")
-public class Product {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    @NotBlank(message = "Product name is required")
     private String name;
 
-    @Column(nullable = false)
-    @Min(value = 0, message = "Price must be greater than 0")
     private Double price;
 
-    @Min(value = 0, message = "Discount must be greater than 0")
-    @Max(value = 100, message = "Discount must be less than 100")
     private Byte discount;
 
     private String imageUrl;
 
     private String description;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "category_id")
-    private Category category;
+    private Integer categoryId;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "brand_id")
-    private Brand brand;
+    private Integer brandId;
 
-    public Product() {
+    public ProductDto() {
     }
 
-    public Product(String name) {
+    public ProductDto(String name) {
         this.name = name;
     }
 
@@ -95,20 +76,20 @@ public class Product {
         this.description = description;
     }
 
-    public Category getCategory() {
-        return category;
+    public Integer getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public Brand getBrand() {
-        return brand;
+    public Integer getBrandId() {
+        return brandId;
     }
 
-    public void setBrand(Brand brand) {
-        this.brand = brand;
+    public void setBrandId(Integer brandId) {
+        this.brandId = brandId;
     }
 
 }
