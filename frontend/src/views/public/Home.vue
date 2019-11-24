@@ -1,10 +1,11 @@
 <template>
   <div>
-    <toolbar/>
+    <app-header />
+
     <v-container fluid>
       <v-layout row wrap>
         <v-flex xs8 class="pr-2 mb-2">
-          <carousel/>
+          <carousel />
         </v-flex>
 
         <v-flex xs4 class="mb-2">
@@ -29,16 +30,22 @@
               </v-card>
             </v-flex>
             <v-flex class="my-2">
-              <v-img src="https://cdn.tgdd.vn/qcao/28_03_2019_14_15_08_Note-8-398-110.png"></v-img>
+              <v-img
+                src="https://cdn.tgdd.vn/qcao/28_03_2019_14_15_08_Note-8-398-110.png"
+              ></v-img>
             </v-flex>
             <v-flex class="my-2">
-              <v-img src="https://cdn.tgdd.vn/qcao/29_03_2019_10_59_44_Sticky-iPhone-398-110.png"></v-img>
+              <v-img
+                src="https://cdn.tgdd.vn/qcao/29_03_2019_10_59_44_Sticky-iPhone-398-110.png"
+              ></v-img>
             </v-flex>
           </v-layout>
         </v-flex>
 
         <v-flex xs12 class="mb-2">
-          <v-img src="https://cdn.tgdd.vn/qcao/09_04_2019_22_57_06_1200-75.png"></v-img>
+          <v-img
+            src="https://cdn.tgdd.vn/qcao/09_04_2019_22_57_06_1200-75.png"
+          ></v-img>
         </v-flex>
 
         <v-flex xs12 class="mb-2">
@@ -68,7 +75,7 @@
               </v-window-item>
             </v-window>
             <v-card-actions>
-              <v-btn flat color="black">
+              <v-btn text color="black">
                 <v-icon>mdi-chevron-left</v-icon>
               </v-btn>
             </v-card-actions>
@@ -76,8 +83,11 @@
         </v-flex>
 
         <v-flex xs12 class="mb-2">
-          <home-product-list :feature="smartphoneFeature" :products="smartphones">
-            <navigate
+          <home-product-list
+            :feature="smartphoneFeature"
+            :products="smartphones"
+          >
+            <navigator
               slot="navigate"
               title="ĐIỆN THOẠI NỔI BẬT NHẤT"
               :links="smartphoneNavigateLinks"
@@ -87,7 +97,7 @@
 
         <v-flex xs12 class="mb-2">
           <home-product-list :feature="laptopFeature" :products="laptops">
-            <navigate
+            <navigator
               slot="navigate"
               title="TABLET - LAPTOP NỔI BẬT NHẤT"
               :links="laptopNavigateLinks"
@@ -97,7 +107,7 @@
 
         <v-flex xs12>
           <v-card>
-            <navigate title="KHUYẾN MÃI TẠI CÁC WEBSITE THÀNH VIÊN"/>
+            <navigator title="KHUYẾN MÃI TẠI CÁC WEBSITE THÀNH VIÊN" />
             <v-divider></v-divider>
             <v-container fluid>
               <v-layout>
@@ -112,44 +122,53 @@
         </v-flex>
       </v-layout>
     </v-container>
-    <app-footer/>
-    <scroll-to-top-button/>
+
+    <app-footer />
+
+    <scroll-to-top-button />
   </div>
 </template>
 
 <script>
-import Toolbar from "@/components/Toolbar";
-import Carousel from "@/components/Carousel";
-import Navigate from "@/components/Navigate";
-import HomeProductList from "@/components/HomeProductList";
-import ScrollToTopButton from "@/components/ScrollToTopButton";
-import AppFooter from "@/components/AppFooter";
+import AppHeader from '@/components/layout/AppHeader';
+import AppFooter from '@/components/layout/AppFooter';
+
+import Carousel from '@/components/ui/Carousel';
+import Navigator from '@/components/ui/Navigator';
+import HomeProductList from '@/components/HomeProductList';
+import ScrollToTopButton from '@/components/ui/ScrollToTopButton';
 
 export default {
   components: {
-    toolbar: Toolbar,
+    'app-header': AppHeader,
     carousel: Carousel,
-    navigate: Navigate,
-    "home-product-list": HomeProductList,
-    "scroll-to-top-button": ScrollToTopButton,
-    "app-footer": AppFooter
+    navigator: Navigator,
+    'home-product-list': HomeProductList,
+    'scroll-to-top-button': ScrollToTopButton,
+    'app-footer': AppFooter
   },
+
   computed: {
     smartphoneNavigateLinks() {
       return this.$store.state.smartphone.navigateLinks;
     },
+
     smartphoneFeature() {
       return this.$store.state.smartphone.feature;
     },
+
     smartphones() {
       return this.$store.state.smartphone.products;
     },
+
     laptopNavigateLinks() {
       return this.$store.state.laptop.navigateLinks;
     },
+
     laptopFeature() {
       return this.$store.state.laptop.feature;
     },
+
     laptops() {
       return this.$store.state.laptop.products;
     }

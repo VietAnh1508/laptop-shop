@@ -21,8 +21,8 @@
         <v-card class="elevation-10">
           <v-card-title>
             <DataTableToolbar
-              title="Child categories"
-              buttonLabel="Add child category"
+              title="Sub categories"
+              buttonLabel="Add sub category"
               @showForm="addChild(props.item)"
             />
           </v-card-title>
