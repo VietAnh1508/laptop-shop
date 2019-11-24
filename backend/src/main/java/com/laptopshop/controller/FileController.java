@@ -2,6 +2,8 @@ package com.laptopshop.controller;
 
 import com.laptopshop.payload.UploadFileResponse;
 import com.laptopshop.service.FileStorageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -28,9 +30,12 @@ public class FileController {
     @Value("${api.path.prefix}")
     private String apiPathPrefix;
 
+    private Logger logger = LoggerFactory.getLogger(FileController.class);
+
     @PostMapping("/uploadFile")
     public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
         String fileName = fileStorageService.storeFile(file);
+        logger.info("Upload file {}", fileName);
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(apiPathPrefix + "/downloadFile/")
@@ -54,14 +59,15 @@ public class FileController {
 
     @GetMapping("/downloadFile/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
+        logger.info("Download file {}", fileName);
+
         Resource resource = fileStorageService.loadFileAsResource(fileName);
 
         String contentType = "application/octet-stream";
         try {
             contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
         } catch (IOException e) {
-            // TODO: replace by a logger
-            System.out.println("Could not determine file type");
+            logger.error("Could not determine file type");
         }
 
         return ResponseEntity.ok()
@@ -72,6 +78,8 @@ public class FileController {
 
     @DeleteMapping("/deleteFile/{fileName:.+}")
     public ResponseEntity deleteFile(@PathVariable String fileName) {
+        logger.info("Delete file {}", fileName);
+
         fileStorageService.deleteFile(fileName);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
