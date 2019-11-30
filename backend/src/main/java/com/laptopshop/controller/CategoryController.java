@@ -27,35 +27,35 @@ public class CategoryController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "Get all categories")
-    public ResponseEntity getAllCategories() {
+    public ResponseEntity<List<CategoryDto>> getAllCategories() {
         List<CategoryDto> categories = categoryService.getAll();
         return ResponseEntity.ok(categories);
     }
 
     @GetMapping(value = "/parent", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "Get all parent categories")
-    public ResponseEntity getAllParentCategories() {
+    public ResponseEntity<List<CategoryDto>> getAllParentCategories() {
         List<CategoryDto> categories = categoryService.getAllParentCategories();
         return ResponseEntity.ok(categories);
     }
 
     @GetMapping(value = "/children", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "Get child categories by parent")
-    public ResponseEntity getCategoriesByParent(@RequestParam Integer parentId) {
+    public ResponseEntity<List<CategoryDto>> getCategoriesByParent(@RequestParam Integer parentId) {
         List<CategoryDto> categories = categoryService.getChildCategoriesByParent(parentId);
         return ResponseEntity.ok(categories);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "Get category by id")
-    public ResponseEntity getById(@PathVariable Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<CategoryDto> getById(@PathVariable Integer id) throws ResourceNotFoundException {
         CategoryDto category = categoryService.getById(id);
         return ResponseEntity.ok(category);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "Add a new category")
-    public ResponseEntity addNewCategory(@Valid @RequestBody CategoryDto newCategory)
+    public ResponseEntity<CategoryDto> addNewCategory(@Valid @RequestBody CategoryDto newCategory)
             throws BadRequestException {
         CategoryDto category = categoryService.create(newCategory);
         return ResponseEntity.status(HttpStatus.CREATED).body(category);
@@ -66,7 +66,7 @@ public class CategoryController {
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "Update category")
-    public ResponseEntity updateCategory(@PathVariable Integer id, @RequestBody CategoryDto category)
+    public ResponseEntity<CategoryDto> updateCategory(@PathVariable Integer id, @RequestBody CategoryDto category)
             throws ResourceNotFoundException {
         CategoryDto editedCategory = categoryService.update(id, category);
         return ResponseEntity.ok(editedCategory);
@@ -74,7 +74,7 @@ public class CategoryController {
 
     @DeleteMapping(value = "/{id}")
     @ApiOperation(value = "Delete category by id")
-    public ResponseEntity deleteCategory(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteCategory(@PathVariable Integer id) {
         categoryService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

@@ -4,7 +4,6 @@ import com.laptopshop.payload.UploadFileResponse;
 import com.laptopshop.service.FileStorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -24,13 +23,16 @@ import java.util.stream.Collectors;
 @RestController
 public class FileController {
 
-    @Autowired
-    private FileStorageService fileStorageService;
+    private final FileStorageService fileStorageService;
 
     @Value("${api.path.prefix}")
     private String apiPathPrefix;
 
     private Logger logger = LoggerFactory.getLogger(FileController.class);
+
+    public FileController(FileStorageService fileStorageService) {
+        this.fileStorageService = fileStorageService;
+    }
 
     @PostMapping("/uploadFile")
     public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
@@ -77,7 +79,7 @@ public class FileController {
     }
 
     @DeleteMapping("/deleteFile/{fileName:.+}")
-    public ResponseEntity deleteFile(@PathVariable String fileName) {
+    public ResponseEntity<Void> deleteFile(@PathVariable String fileName) {
         logger.info("Delete file {}", fileName);
 
         fileStorageService.deleteFile(fileName);

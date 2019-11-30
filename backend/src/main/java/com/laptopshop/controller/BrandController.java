@@ -27,21 +27,21 @@ public class BrandController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "Get all brands")
-    public ResponseEntity getAllBrands() {
+    public ResponseEntity<List<BrandDto>> getAllBrands() {
         List<BrandDto> brands = brandService.getAll();
         return ResponseEntity.ok(brands);
     }
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "Get brand by id")
-    public ResponseEntity getBrandById(@PathVariable Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<BrandDto> getBrandById(@PathVariable Integer id) throws ResourceNotFoundException {
         BrandDto brand = brandService.getById(id);
         return ResponseEntity.ok(brand);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "Add a new brand")
-    public ResponseEntity addNewBrand(@Valid @RequestBody BrandDto newBrand) throws BadRequestException {
+    public ResponseEntity<BrandDto> addNewBrand(@Valid @RequestBody BrandDto newBrand) throws BadRequestException {
         BrandDto createdBrand = brandService.create(newBrand);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdBrand);
     }
@@ -51,7 +51,7 @@ public class BrandController {
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "Update brand")
-    public ResponseEntity updateBrand(@PathVariable Integer id, @RequestBody BrandDto brand)
+    public ResponseEntity<BrandDto> updateBrand(@PathVariable Integer id, @RequestBody BrandDto brand)
             throws ResourceNotFoundException, BadRequestException {
         BrandDto updatedBrand = brandService.update(id, brand);
         return ResponseEntity.ok(updatedBrand);
@@ -59,7 +59,7 @@ public class BrandController {
 
     @DeleteMapping(value = "/{id}")
     @ApiOperation(value = "Delete brand by id")
-    public ResponseEntity deleteBrand(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteBrand(@PathVariable Integer id) {
         brandService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
