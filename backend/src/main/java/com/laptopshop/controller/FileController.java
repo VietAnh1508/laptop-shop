@@ -2,6 +2,7 @@ package com.laptopshop.controller;
 
 import com.laptopshop.payload.UploadFileResponse;
 import com.laptopshop.service.FileStorageService;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +21,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Api(value = "File")
 @RestController
+@RequestMapping("/files")
 public class FileController {
 
     private final FileStorageService fileStorageService;
@@ -34,13 +37,13 @@ public class FileController {
         this.fileStorageService = fileStorageService;
     }
 
-    @PostMapping("/uploadFile")
+    @PostMapping("/upload")
     public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
         String fileName = fileStorageService.storeFile(file);
         logger.info("Upload file {}", fileName);
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(apiPathPrefix + "/downloadFile/")
+                .path(apiPathPrefix + "/files/download/")
                 .path(fileName)
                 .toUriString();
 
@@ -52,14 +55,14 @@ public class FileController {
         );
     }
 
-    @PostMapping(value = "/uploadMultipleFiles")
+    @PostMapping(value = "/uploadMultiple")
     public List<UploadFileResponse> uploadMultipleFile(@RequestParam("files") MultipartFile[] files) {
         return Arrays.stream(files)
                 .map(this::uploadFile)
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/downloadFile/{fileName:.+}")
+    @GetMapping("/download/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
         logger.info("Download file {}", fileName);
 
@@ -78,7 +81,7 @@ public class FileController {
                 .body(resource);
     }
 
-    @DeleteMapping("/deleteFile/{fileName:.+}")
+    @DeleteMapping("/delete/{fileName:.+}")
     public ResponseEntity<Void> deleteFile(@PathVariable String fileName) {
         logger.info("Delete file {}", fileName);
 
