@@ -36,14 +36,6 @@ export default {
       set(value) {
         this.$emit("input", value);
       }
-    },
-    itemName: {
-      get() {
-        return this.editedItem.name;
-      },
-      set(value) {
-        this.name = value;
-      }
     }
   },
   methods: {
