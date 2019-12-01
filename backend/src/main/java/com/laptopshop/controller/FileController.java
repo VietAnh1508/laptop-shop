@@ -3,6 +3,7 @@ package com.laptopshop.controller;
 import com.laptopshop.payload.UploadFileResponse;
 import com.laptopshop.service.FileStorageService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,9 +18,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Api(value = "File")
 @RestController
@@ -37,31 +35,28 @@ public class FileController {
         this.fileStorageService = fileStorageService;
     }
 
-    @PostMapping("/upload")
-    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
+    @ApiOperation(value = "Upload file")
+    @PostMapping(value = "/upload", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<UploadFileResponse> uploadFile(@RequestParam("file") MultipartFile file) {
         String fileName = fileStorageService.storeFile(file);
-        logger.info("Upload file {}", fileName);
+        logger.info("Upload file \"{}\"", fileName);
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(apiPathPrefix + "/files/download/")
                 .path(fileName)
                 .toUriString();
 
-        return new UploadFileResponse(
+        UploadFileResponse uploadFileResponse = new UploadFileResponse(
                 fileName,
                 fileDownloadUri,
                 file.getContentType(),
                 file.getSize()
         );
+
+        return ResponseEntity.ok(uploadFileResponse);
     }
 
-    @PostMapping(value = "/uploadMultiple")
-    public List<UploadFileResponse> uploadMultipleFile(@RequestParam("files") MultipartFile[] files) {
-        return Arrays.stream(files)
-                .map(this::uploadFile)
-                .collect(Collectors.toList());
-    }
-
+    @ApiOperation(value = "Download file")
     @GetMapping("/download/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
         logger.info("Download file {}", fileName);
@@ -81,6 +76,7 @@ public class FileController {
                 .body(resource);
     }
 
+    @ApiOperation(value = "Delete file")
     @DeleteMapping("/delete/{fileName:.+}")
     public ResponseEntity<Void> deleteFile(@PathVariable String fileName) {
         logger.info("Delete file {}", fileName);
